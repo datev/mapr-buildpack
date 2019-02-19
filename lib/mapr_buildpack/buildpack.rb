@@ -54,7 +54,13 @@ module MapRBuildpack
       target_path = File.join(@app_dir, ".mapr")
 
       mapr_client = MapRBuildpack::MapRClient.new
-      mapr_client.download(mapr_client_version, url, download_target)
+      if configuration.is_in_offline_mode
+        source = configuration.offline_mapr_client_filename
+        already_available_client = File.expand_path(source, File.dirname(__FILE__))
+        FileUtils.cp(already_available_client, download_target)
+      else
+        mapr_client.download(mapr_client_version, url, download_target)
+      end
       mapr_client.unzip(download_target, target_path)
 
       # Copy .profile to the app root

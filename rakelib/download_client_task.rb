@@ -54,6 +54,16 @@ module Package
       "Download_MapR_Client"
     end
 
+    def disable_remote_downloads_task
+      filename = "#{STAGING_DIR}/config/.offline"
+      directory "#{STAGING_DIR}/config/"
+      file filename do |t|
+        File.open(t.name, 'w') { |f| f.write @filename }
+      end
+
+      filename
+    end
+
   end
 
 end
