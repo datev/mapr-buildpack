@@ -16,7 +16,6 @@
 # limitations under the License.
 
 require 'mapr_buildpack'
-require 'mapr_buildpack/util/configuration_utils'
 require 'mapr_buildpack/util/to_b'
 
 module MapRBuildpack
@@ -46,11 +45,10 @@ module MapRBuildpack
 
     # Creates a new instance
     def initialize()
-      configuration = MapRBuildpack::Util::ConfigurationUtils.load('version', true)
-      @hash         = configuration['hash'] || calculate_hash
-      @offline      = configuration['offline'] || ENV['OFFLINE'].to_b
-      @remote       = configuration['remote'] || calculate_remote
-      @version      = configuration['version'] || ENV['VERSION'] || @hash
+      @hash         = calculate_hash
+      @offline      = ENV['OFFLINE'].to_b
+      @remote       = calculate_remote
+      @version      = ENV['VERSION'] || @hash
     end
 
     # Returns a +Hash+ representation of the buildpack version.
