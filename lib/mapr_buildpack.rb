@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
 # Cloud Foundry MapR Buildpack
 # Copyright (c) 2019 the original author or authors.
@@ -15,14 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$stdout.sync = true
-$stderr.sync = true
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-
-require 'mapr_buildpack/buildpack'
-
-app_dir = ARGV[0]
-deps = ARGV[2]
-index = ARGV[3]
-
-MapRBuildpack::Buildpack.new(app_dir, deps, index).supply
+# A module encapsulating all of the code for the Java buildpack
+module MapRBuildpack
+end
