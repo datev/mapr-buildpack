@@ -57,6 +57,11 @@ module MapRBuildpack
       mapr_client.download(mapr_client_version, url, download_target)
       mapr_client.unzip(download_target, target_path)
 
+      # Copy .profile to the app root
+      profile_source = File.expand_path("../../resources/.profile", File.dirname(__FILE__))
+      profile_target = File.join(@app_dir, ".profile")
+      FileUtils.cp(profile_source, profile_target)
+
       # Create config.yml to provide environment variables
       buildpackConfig = {
         "name" => "mapr_buildpack",
