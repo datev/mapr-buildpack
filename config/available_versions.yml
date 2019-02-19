@@ -1,0 +1,22 @@
+# Cloud Foundry MapR Buildpack
+# Copyright (c) 2019 the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Configuration for available MapR client versions
+---
+6.1.0 : https://package.mapr.com/releases/v6.1.0/ubuntu/mapr-thin-client-6.1.0.20180926230239.GA-1.x86_64.tar.gz
+6.0.1 : https://package.mapr.com/releases/v6.0.1/ubuntu/mapr-thin-client-6.0.1.20180404222005.GA-1.x86_64.tar.gz
+6.0.0 : https://package.mapr.com/releases/v6.0.0/ubuntu/mapr-thin-client-6.0.0.20171109191718.GA-1.x86_64.tar.gz
+5.2.2 : https://package.mapr.com/releases/v5.2.2/ubuntu/mapr-thin-client-5.2.2.44680GA-1.x86_64.tar.gz
+5.2.1 : https://package.mapr.com/releases/v5.2.1/ubuntu/mapr-thin-client-5.2.1.42646GA-1.x86_64.tar.gz
