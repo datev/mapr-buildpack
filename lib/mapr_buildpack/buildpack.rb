@@ -57,6 +57,19 @@ module MapRBuildpack
       mapr_client.download(mapr_client_version, url, download_target)
       mapr_client.unzip(download_target, target_path)
 
+      # Create config.yml to provide environment variables
+      buildpackConfig = {
+        "name" => "mapr_buildpack",
+        "config" => {
+          "environment_variables" => {
+            "MAPR_HOME" => "/home/vcap/app/.mapr/mapr",
+            "MAPR_TICKETFILE_LOCATION" => "/home/vcap/app/.mapr-ticket/ticket"
+          }
+        }
+      }
+      config_path = File.join(@deps, @index, "config.yml")
+      File.open(config_path, "w") { |file| file.write(buildpackConfig.to_yaml) }
+
       print "Supplied MapR client at #{target_path}\n"
     end
   end
