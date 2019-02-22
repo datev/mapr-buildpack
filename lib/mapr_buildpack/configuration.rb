@@ -48,14 +48,21 @@ module MapRBuildpack
     end
 
     def is_in_offline_mode
-      offlineModeFile = File.expand_path("../../config/.offline", File.dirname(__FILE__))
+      offlineModeFile = offline_mode_filename
       fileExists = File.exist?(offlineModeFile)
 
       fileExists
     end
 
     def offline_mapr_client_filename
-      filename = File.read("../../config/.offline")
+      offlineModeFile = offline_mode_filename
+      fileContent = File.read(offlineModeFile)
+
+      fileContent
+    end
+
+    def offline_mode_filename
+      filename File.expand_path("../../config/.offline", File.dirname(__FILE__))
 
       filename
     end
