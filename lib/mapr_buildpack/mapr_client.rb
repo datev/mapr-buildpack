@@ -17,7 +17,6 @@
 
 require 'mapr_buildpack'
 require 'fileutils'
-# require 'yaml'
 require 'open-uri'
 
 module MapRBuildpack

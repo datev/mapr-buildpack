@@ -16,7 +16,6 @@
 # limitations under the License.
 
 require 'mapr_buildpack'
-require 'mapr_buildpack/buildpack_version'
 require 'mapr_buildpack/mapr_client'
 require 'fileutils'
 require 'open-uri'
