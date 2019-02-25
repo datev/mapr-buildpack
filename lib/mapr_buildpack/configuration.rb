@@ -62,7 +62,7 @@ module MapRBuildpack
     end
 
     def offline_mode_filename
-      filename File.expand_path("../../config/.offline", File.dirname(__FILE__))
+      filename = File.expand_path("../../config/.offline", File.dirname(__FILE__))
 
       filename
     end

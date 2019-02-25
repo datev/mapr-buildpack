@@ -55,7 +55,7 @@ module MapRBuildpack
       mapr_client = MapRBuildpack::MapRClient.new
       if configuration.is_in_offline_mode
         source = configuration.offline_mapr_client_filename
-        already_available_client = File.expand_path(source, File.dirname(__FILE__))
+        already_available_client = File.expand_path("../../resources/#{source}", File.dirname(__FILE__))
         FileUtils.cp(already_available_client, download_target)
       else
         mapr_client.download(mapr_client_version, url, download_target)
