@@ -18,13 +18,15 @@ MAPR_TICKETFILE_LOCATION_DIR="/home/vcap/app/.mapr-ticket"
 export MAPR_TICKETFILE_LOCATION="$MAPR_TICKETFILE_LOCATION_DIR/ticket"
 
 
-if [[ -z ${MAPR_CLUSTER_NAME+x} ]] then
+if [[ -z ${MAPR_CLUSTER_NAME+x} ]]
+then
     echo "Environment variable \$MAPR_CLUSTER_NAME is not set; can not write ticket or mapr-clusters.conf to filesystem"
     exit 0
 fi
 
 
-if [[ -z ${MAPR_TICKET+x} ]] then
+if [[ -z ${MAPR_TICKET+x} ]]
+then
     echo "Environment variable \$MAPR_TICKET is not set; can not write ticket to filesystem"
     exit 0
 else
@@ -36,7 +38,8 @@ else
     echo "Created MapR ticket file"
 fi
 
-if [[ -z ${MAPR_CLDB_NODES+x} ]] then
+if [[ -z ${MAPR_CLDB_NODES+x} ]]
+then
     echo "Environment variable \$MAPR_CLDB_NODES is not set; can not write mapr-clusters.conf to filesystem"
     exit 0
 else
