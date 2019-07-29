@@ -21,29 +21,25 @@ export MAPR_TICKETFILE_LOCATION="$MAPR_TICKETFILE_LOCATION_DIR/ticket"
 if [[ -z ${MAPR_CLUSTER_NAME+x} ]]
 then
     echo "Environment variable \$MAPR_CLUSTER_NAME is not set; can not write ticket or mapr-clusters.conf to filesystem"
-    exit 0
-fi
-
-
-if [[ -z ${MAPR_TICKET+x} ]]
-then
-    echo "Environment variable \$MAPR_TICKET is not set; can not write ticket to filesystem"
-    exit 0
 else
-    echo "Environment variable \$MAPR_TICKET is set; writing ticket to filesystem"
-    
-    # write the ticket
-    mkdir $MAPR_TICKETFILE_LOCATION_DIR
-    echo "$MAPR_CLUSTER_NAME $MAPR_TICKET" > $MAPR_TICKETFILE_LOCATION
-    echo "Created MapR ticket file"
-fi
+    if [[ -z ${MAPR_TICKET+x} ]]
+    then
+        echo "Environment variable \$MAPR_TICKET is not set; can not write ticket to filesystem"
+    else
+        echo "Environment variable \$MAPR_TICKET is set; writing ticket to filesystem"
+        
+        # write the ticket
+        mkdir $MAPR_TICKETFILE_LOCATION_DIR
+        echo "$MAPR_CLUSTER_NAME $MAPR_TICKET" > $MAPR_TICKETFILE_LOCATION
+        echo "Created MapR ticket file"
+    fi
 
-if [[ -z ${MAPR_CLDB_NODES+x} ]]
-then
-    echo "Environment variable \$MAPR_CLDB_NODES is not set; can not write mapr-clusters.conf to filesystem"
-    exit 0
-else
-    # setup the client
-    echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES//,/ }" > $MAPR_HOME/conf/mapr-clusters.conf
-    echo "Updated MapR cluster configuration"
+    if [[ -z ${MAPR_CLDB_NODES+x} ]]
+    then
+        echo "Environment variable \$MAPR_CLDB_NODES is not set; can not write mapr-clusters.conf to filesystem"
+    else
+        # setup the client
+        echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES//,/ }" > $MAPR_HOME/conf/mapr-clusters.conf
+        echo "Updated MapR cluster configuration"
+    fi
 fi
