@@ -58,20 +58,16 @@ else
     MAPR_CLUSTER_NAME=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["mapr-cluster-name"]')
     CREDHUB_BASE_URI=$(echo $VCAP_PLATFORM_OPTIONS |  jq --raw-output '.["credhub-uri"]')
 
-    echo $CREDHUB_REF
-    echo $MAPR_CLDB_NODES
-    echo $MAPR_CLUSTER_NAME
-
-    curl --key $CF_INSTANCE_KEY --cert $CF_INSTANCE_CERT $CREDHUB_BASE_URI'/api/v1/data?name=$CREDHUB_REF'
+    RESOLVED_MAPR_CREDENTIALS=$(curl -s --key $CF_INSTANCE_KEY --cert $CF_INSTANCE_CERT "$CREDHUB_BASE_URI/api/v1/data?name=$CREDHUB_REF")
 
     MAPR_TICKET=$(echo $RESOLVED_MAPR_CREDENTIALS | jq --raw-output '.["data"] | .[0] | .["value"] | .["ticket"]')
 
     # write the ticket
     mkdir $MAPR_TICKETFILE_LOCATION_DIR
-    echo "$MAPR_CLUSTER_NAME $MAPR_TICKET" > $MAPR_TICKETFILE_LOCATION
+    echo $MAPR_TICKET > $MAPR_TICKETFILE_LOCATION
     echo "Created MapR ticket file"
 
     # setup the client
-    echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES//,/ }" > $MAPR_HOME/conf/mapr-clusters.conf
+    echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES}" > $MAPR_HOME/conf/mapr-clusters.conf
     echo "Updated MapR cluster configuration"
 fi
