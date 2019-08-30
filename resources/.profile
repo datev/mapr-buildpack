@@ -54,11 +54,19 @@ else
 
     MAPR_CREDENTIALS=$(echo $MAPR_SERVICE_BROKER_CONFIG | jq '.["credentials"]')
     CREDHUB_REF=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["credhub-ref"]')
+    echo "Using credhub reference $CREDHUB_REF"
+
     MAPR_CLDB_NODES=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["mapr-cldb-nodes"]')
+    echo "Using MapR CLDB nodes $MAPR_CLDB_NODES"
+
     MAPR_CLUSTER_NAME=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["mapr-cluster-name"]')
+    echo "Using MapR cluster name $MAPR_CLUSTER_NAME"
+
     CREDHUB_BASE_URI=$(echo $VCAP_PLATFORM_OPTIONS |  jq --raw-output '.["credhub-uri"]')
+    echo "Connecting credhub at $CREDHUB_BASE_URI to resolve credentials"
 
     RESOLVED_MAPR_CREDENTIALS=$(curl -s --key $CF_INSTANCE_KEY --cert $CF_INSTANCE_CERT "$CREDHUB_BASE_URI/api/v1/data?name=$CREDHUB_REF")
+    echo "Successful resolved MapR credentials"
 
     MAPR_TICKET=$(echo $RESOLVED_MAPR_CREDENTIALS | jq --raw-output '.["data"] | .[0] | .["value"] | .["ticket"]')
 
