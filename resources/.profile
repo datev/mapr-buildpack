@@ -53,9 +53,6 @@ else
     echo "MapR service broker detected. Resolving values from service broker and credhub"
 
     MAPR_CREDENTIALS=$(echo $MAPR_SERVICE_BROKER_CONFIG | jq '.["credentials"]')
-    CREDHUB_REF=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["credhub-ref"]')
-    echo "Using credhub reference $CREDHUB_REF"
-
     MAPR_CLDB_NODES=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["mapr-cldb-nodes"]')
     echo "Using MapR CLDB nodes $MAPR_CLDB_NODES"
 
@@ -65,17 +62,15 @@ else
     CREDHUB_BASE_URI=$(echo $VCAP_PLATFORM_OPTIONS |  jq --raw-output '.["credhub-uri"]')
     echo "Connecting credhub at $CREDHUB_BASE_URI to resolve credentials"
 
-    RESOLVED_MAPR_CREDENTIALS=$(curl -s --key $CF_INSTANCE_KEY --cert $CF_INSTANCE_CERT "$CREDHUB_BASE_URI/api/v1/data?name=$CREDHUB_REF")
-    echo "Successful resolved MapR credentials"
-
-    MAPR_TICKET=$(echo $RESOLVED_MAPR_CREDENTIALS | jq --raw-output '.["data"] | .[0] | .["value"] | .["ticket"]')
+    MAPR_TICKET=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["ticket"]')
 
     # write the ticket
     mkdir $MAPR_TICKETFILE_LOCATION_DIR
     echo $MAPR_TICKET > $MAPR_TICKETFILE_LOCATION
-    echo "Created MapR ticket file"
+    echo "Created MapR ticket file at $MAPR_TICKETFILE_LOCATION"
 
     # setup the client
-    echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES}" > $MAPR_HOME/conf/mapr-clusters.conf
-    echo "Updated MapR cluster configuration"
+    MAPR_CLUSTER_CONF_LOCATION="$MAPR_HOME/conf/mapr-clusters.conf"
+    echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES}" > $MAPR_CLUSTER_CONF_LOCATION
+    echo "Updated MapR cluster configuration at $MAPR_CLUSTER_CONF_LOCATION"
 fi
