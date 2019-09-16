@@ -20,7 +20,7 @@ export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 export MAPR_TICKETFILE_LOCATION="/home/vcap/app/.mapr/ticket"
 
 ### Create MapR conf directory
-if [! -d "$MAPR_HOME/conf"]
+if [ ! -d "$MAPR_HOME/conf" ]
 then
     echo "Creating $MAPR_HOME/conf directory"
     mv "$MAPR_HOME/conf.new" "$MAPR_HOME/conf"
