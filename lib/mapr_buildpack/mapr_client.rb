@@ -47,7 +47,12 @@ module MapRBuildpack
     # @param [String] target_path the path where the unziped files should be stored
     def unzip(path_to_zip, target_path)
         FileUtils.mkdir_p target_path
-        shell "tar x#{compression_flag(target_path)}f #{path_to_zip} -C #{target_path} 2>&1"
+
+        if debian_package?(path_to_zip)
+            extract_debian(path_to_zip, target_path)
+        else
+            shell "tar x#{compression_flag(target_path)}f #{path_to_zip} -C #{target_path} 2>&1"
+
         File.delete(path_to_zip)
     end
 
@@ -72,12 +77,24 @@ module MapRBuildpack
             end
         end
 
+        def debian_package?(file)
+            file.end_with? '.deb'
+        end
+
         def gzipped?(file)
             file.end_with? '.gz'
         end
 
         def bzipped?(file)
             file.end_with? '.bz2'
+        end
+
+        def extract_debian(file, target_path)
+            shell "dpkg -x #{file} #{target_path} 2>&1"
+            shell "mv #{target_path}/opt/mapr #{target_path}/mapr"
+            shell "rm #{target_path}/opt -r"
+            shell "rm #{target_path}/RPMS/ -r"
+            shell "rm #{target_path}/SPECS/ -r"
         end
 
         def compression_flag(file)
