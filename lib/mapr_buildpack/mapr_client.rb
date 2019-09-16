@@ -52,6 +52,7 @@ module MapRBuildpack
             extract_debian(path_to_zip, target_path)
         else
             shell "tar x#{compression_flag(target_path)}f #{path_to_zip} -C #{target_path} 2>&1"
+        end
 
         File.delete(path_to_zip)
     end
