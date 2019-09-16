@@ -100,3 +100,4 @@ then
     echo "Environment variable \$MAPR_SSL_TRUSTSTORE is not set; could not provide ssl_truststore"
 else
     echo $MAPR_SSL_TRUSTSTORE | base64 --decode > "$MAPR_HOME/conf/ssl_truststore"
+fi
