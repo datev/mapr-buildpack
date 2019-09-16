@@ -19,13 +19,15 @@ The buildpacks can also be defined in the applications manifest.yml:
 For more details see the [Cloud Foundry docs](https://docs.cloudfoundry.org/buildpacks/use-multiple-buildpacks.html).
 
 ### Required arguments
-The buildpack requires some arguments to setup the MapR client configuration. You can provide these arguments via environment variables or via 
+The buildpack requires some arguments to setup the MapR client configuration during **application startup**. You can provide these arguments via environment variables or via 
 [Open Service Broker API](https://www.openservicebrokerapi.org/).
 
 #### Environment Variables:
 - `$MAPR_CLUSTER_NAME`: The name of the MapR cluster
 - `$MAPR_TICKET`: The MapR authentiation ticket to access the cluster
 - `$MAPR_CLDB_NODES`: Comma separated list of all available CLDB nodes with including the CLDB port (usually 7222)
+- `$MAPR_CORE_SITE` (optional): The content of this file will be set as content of the `core-site.xml` file
+- `$MAPR_SSL_TRUSTSTORE`(optional): This variable contains the SSL truststore as base64 encoded string. The decoded value will be written to the ssl_trustore file
 
 #### Open Service Broker API:
 The Service Broker should provide a JSON with the following structure to the [VCAP_SERVICES](https://docs.run.pivotal.io/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES):

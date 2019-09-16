@@ -13,10 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+### Provide envrionment variables
 export MAPR_HOME="/home/vcap/app/.mapr/mapr"
 export HADOOP_HOME="$MAPR_HOME/hadoop/hadoop-2.7.0"
+export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 export MAPR_TICKETFILE_LOCATION="/home/vcap/app/.mapr/ticket"
 
+### Create MapR conf directory
+if [! -d "$MAPR_HOME/conf"]
+then
+    echo "Creating $MAPR_HOME/conf directory"
+    mv "$MAPR_HOME/conf.new" "$MAPR_HOME/conf"
+    ln -s "$HADOOP_CONF/ssl-client.xml" "$MAPR_HOME/conf/ssl-client.xml"
+    ln -s "$HADOOP_CONF/ssl-server.xml" "$MAPR_HOME/conf/ssl-server.xml"
+fi
+
+### Provide mapr-clusters.conf and MapR ticket
 MAPR_SERVICE_BROKER_CONFIG=$(echo $VCAP_SERVICES | jq '.["MapR"] | .[0]')
 
 if [ "${MAPR_SERVICE_BROKER_CONFIG}" = "null" ]
@@ -73,7 +85,7 @@ else
 fi
 
 
-
+### Provide core-site.xml
 if [[ -z ${MAPR_CORE_SITE+x} ]]
 then
     echo "Environment variable \$MAPR_CORE_SITE is not set; using default core-site.xml"
@@ -81,3 +93,10 @@ else
     echo "Environment variable \$MAPR_CORE_SITE is set; writing value to core-site.xml"
     echo $MAPR_CORE_SITE > "$HADOOP_HOME/etc/hadoop/core-site.xml"
 fi
+
+### Provide SSL Truststore
+if [[ -z ${MAPR_SSL_TRUSTSTORE+x} ]]
+then
+    echo "Environment variable \$MAPR_SSL_TRUSTSTORE is not set; could not provide ssl_truststore"
+else
+    echo $MAPR_SSL_TRUSTSTORE | base64 --decode > "$MAPR_HOME/conf/ssl_truststore"
