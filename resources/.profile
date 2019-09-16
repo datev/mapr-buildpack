@@ -14,9 +14,8 @@
 # limitations under the License.
 
 export MAPR_HOME="/home/vcap/app/.mapr/mapr"
-export HADOOP_HOME="/home/vcap/app/.mapr/mapr/hadoop/hadoop-2.7.0"
-MAPR_TICKETFILE_LOCATION_DIR="/home/vcap/app/.mapr-ticket"
-export MAPR_TICKETFILE_LOCATION="$MAPR_TICKETFILE_LOCATION_DIR/ticket"
+export HADOOP_HOME="$MAPR_HOME/hadoop/hadoop-2.7.0"
+export MAPR_TICKETFILE_LOCATION="/home/vcap/app/.mapr/ticket"
 
 MAPR_SERVICE_BROKER_CONFIG=$(echo $VCAP_SERVICES | jq '.["MapR"] | .[0]')
 
@@ -34,7 +33,6 @@ then
             echo "Environment variable \$MAPR_TICKET is set; writing ticket to filesystem"
 
             # write the ticket
-            mkdir $MAPR_TICKETFILE_LOCATION_DIR
             echo "$MAPR_CLUSTER_NAME $MAPR_TICKET" > $MAPR_TICKETFILE_LOCATION
             echo "Created MapR ticket file"
         fi
@@ -65,7 +63,6 @@ else
     MAPR_TICKET=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["ticket"]')
 
     # write the ticket
-    mkdir $MAPR_TICKETFILE_LOCATION_DIR
     echo $MAPR_TICKET > $MAPR_TICKETFILE_LOCATION
     echo "Created MapR ticket file at $MAPR_TICKETFILE_LOCATION"
 
@@ -73,4 +70,14 @@ else
     MAPR_CLUSTER_CONF_LOCATION="$MAPR_HOME/conf/mapr-clusters.conf"
     echo "$MAPR_CLUSTER_NAME secure=true ${MAPR_CLDB_NODES}" > $MAPR_CLUSTER_CONF_LOCATION
     echo "Updated MapR cluster configuration at $MAPR_CLUSTER_CONF_LOCATION"
+fi
+
+
+
+if [[ -z ${MAPR_CORE_SITE+x} ]]
+then
+    echo "Environment variable \$MAPR_CORE_SITE is not set; using default core-site.xml"
+else
+    echo "Environment variable \$MAPR_CORE_SITE is set; writing value to core-site.xml"
+    echo $MAPR_CORE_SITE > "$HADOOP_HOME/etc/hadoop/core-site.xml"
 fi
