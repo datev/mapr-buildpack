@@ -69,9 +69,6 @@ else
     MAPR_CLUSTER_NAME=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["mapr-cluster-name"]')
     echo "Using MapR cluster name $MAPR_CLUSTER_NAME"
 
-    CREDHUB_BASE_URI=$(echo $VCAP_PLATFORM_OPTIONS |  jq --raw-output '.["credhub-uri"]')
-    echo "Connecting credhub at $CREDHUB_BASE_URI to resolve credentials"
-
     MAPR_TICKET=$(echo $MAPR_CREDENTIALS | jq --raw-output '.["ticket"]')
 
     # write the ticket
