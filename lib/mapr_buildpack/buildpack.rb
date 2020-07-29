@@ -71,6 +71,9 @@ module MapRBuildpack
       buildpackConfig = {
         "name" => "mapr_buildpack",
         "config" => {
+          "additional_libraries" => {
+            "/home/vcap/app/.mapr/mapr/hadoop/hadoop-2.7.0/etc/hadoop/"
+          },
           "environment_variables" => {
             "MAPR_HOME" => "/home/vcap/app/.mapr/mapr",
             "MAPR_TICKETFILE_LOCATION" => "/home/vcap/app/.mapr/ticket",
