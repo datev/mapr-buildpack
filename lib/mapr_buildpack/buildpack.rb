@@ -72,7 +72,7 @@ module MapRBuildpack
         "name" => "mapr_buildpack",
         "config" => {
           "additional_libraries" => [
-            "/home/vcap/app/.mapr/mapr/hadoop/hadoop-2.7.0/etc/hadoop/"
+            "/home/vcap/app/.mapr/mapr/hadoop/hadoop-2.7.0/etc/hadoop/core-site.xml"
           ] ,
           "environment_variables" => {
             "MAPR_HOME" => "/home/vcap/app/.mapr/mapr",
