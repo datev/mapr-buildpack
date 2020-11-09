@@ -15,6 +15,7 @@
 
 # Configuration for available MapR client versions
 ---
+6.2.0 : https://package.mapr.com/releases/v6.2.0/ubuntu/mapr-client-6.2.0.0.20200915234957.GA-1.amd64.deb
 6.1.0 : https://package.mapr.com/releases/v6.1.0/ubuntu/mapr-client-6.1.0.20180926230239.GA-1.amd64.deb
 6.1.0_thin : https://package.mapr.com/releases/v6.1.0/ubuntu/mapr-thin-client-6.1.0.20180926230239.GA-1.x86_64.tar.gz
 6.0.1_thin : https://package.mapr.com/releases/v6.0.1/ubuntu/mapr-thin-client-6.0.1.20180404222005.GA-1.x86_64.tar.gz
