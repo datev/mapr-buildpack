@@ -47,6 +47,15 @@ module MapRBuildpack
       url
     end
 
+    def patch_urls(mapr_client_version)
+      # parse yaml file to get list of available patches for the specified client
+      availablePatchesFile = File.expand_path("../../config/available_patches.yml", File.dirname(__FILE__))
+      availablePatchesConfiguration = YAML.load_file(availablePatchesFile)
+      patchUrls = availablePatchesConfiguration[mapr_client_version]
+
+      patchUrls
+    end
+
     def is_in_offline_mode
       offlineModeFile = offline_mode_filename
       fileExists = File.exist?(offlineModeFile)

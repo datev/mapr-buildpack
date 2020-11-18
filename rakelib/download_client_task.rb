@@ -35,10 +35,10 @@ module Package
       configuration = MapRBuildpack::Configuration.new
       @mapr_client_version = configuration.version
       @url = configuration.url(@mapr_client_version)
-      @filename = URI(@url).path.split('/').last
-      @download_target = File.join(STAGING_DIR, "resources", @filename)
+      @patch_urls = configuration.patch_urls(@mapr_client_version)
 
       multitask PACKAGE_NAME => [download_mapr_client]
+      multitask PACKAGE_NAME => [download_mapr_client_patches]
       multitask PACKAGE_NAME => [disable_remote_downloads_task]
     end
 
@@ -48,20 +48,44 @@ module Package
       mapr_client = MapRBuildpack::MapRClient.new
 
       task "Download_MapR_Client" => [] do |t|
-        mapr_client.download(@mapr_client_version, @url, @download_target)
+        print "-----> Downloading MapR Client #{@mapr_client_version} from #{@url}\n"
+        mapr_client.download(@url, download_target(@url))
       end
 
       "Download_MapR_Client"
     end
 
+    def download_mapr_client_patches
+      mapr_client = MapRBuildpack::MapRClient.new
+
+      task "Download_MapR_Client_Patches" => [] do |t|
+        unless @patch_urls.nil? || @patch_urls == 0
+          @patch_urls.each do |patch_url|
+            print "-----> Downloading MapR Client Patch #{@mapr_client_version} from #{patch_url}\n"
+            mapr_client.download(patch_url, download_target(patch_url))
+          end
+        end
+      end
+
+      "Download_MapR_Client_Patches"
+    end
+
     def disable_remote_downloads_task
+      print "-----> Set flag to disable any remote downloads while staging apps\n"
       filename = "#{STAGING_DIR}/config/.offline"
       directory "#{STAGING_DIR}/config/"
       file filename do |t|
-        File.open(t.name, 'w') { |f| f.write @filename }
+        File.open(t.name, 'w') { |f| f.write URI(@url).path.split('/').last }
       end
 
       filename
+    end
+
+    def download_target(url)
+      filename = URI(url).path.split('/').last
+      download_target = File.join(STAGING_DIR, "resources", filename)
+
+      download_target
     end
 
   end
