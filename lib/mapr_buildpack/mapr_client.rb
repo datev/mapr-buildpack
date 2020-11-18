@@ -26,9 +26,7 @@ module MapRBuildpack
     # @param [String] mapr_client_version the version of the MapR client which should be downloaded
     # @param [String] url the URL of the file that should be downloaded
     # @param [String] download_target the path where the downloaded file should be stored
-    def download(mapr_client_version, url, download_target)
-        print "-----> Downloading MapR Client #{mapr_client_version} from #{url}\n"
-
+    def download(url, download_target)
         parent = File.dirname(download_target)
         unless File.directory?(parent)
             FileUtils.mkdir_p(parent)

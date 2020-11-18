@@ -33,6 +33,7 @@ module MapRBuildpack
       @app_dir = app_dir
       @deps = deps
       @index = index
+      @configuration = MapRBuildpack::Configuration.new
     end
 
     # Supplies the MapR client to the droplet
@@ -41,26 +42,15 @@ module MapRBuildpack
     def supply
       print "Supplying MapR client\n"
 
-      configuration = MapRBuildpack::Configuration.new
-
-      mapr_client_version = configuration.version
-      url = configuration.url(mapr_client_version)
+      mapr_client_version = @configuration.version
+      url = @configuration.url(mapr_client_version)
+      patch_urls = @configuration.patchUrls(mapr_client_version)
       
       print "Selected MapR client version #{mapr_client_version}\n"
 
-      filename = URI(url).path.split('/').last
-      download_target = File.join(@app_dir, filename)
-      target_path = File.join(@app_dir, ".mapr")
-
-      mapr_client = MapRBuildpack::MapRClient.new
-      if configuration.is_in_offline_mode
-        source = configuration.offline_mapr_client_filename
-        already_available_client = File.expand_path("../../resources/#{source}", File.dirname(__FILE__))
-        FileUtils.cp(already_available_client, download_target)
-      else
-        mapr_client.download(mapr_client_version, url, download_target)
-      end
-      mapr_client.unzip(download_target, target_path)
+      # Download and extract the MapR client with all available patches
+      print "-----> Downloading MapR Client #{mapr_client_version} from #{url}\n"
+      supply_client_and_patches(url, patch_urls)
 
       # Copy .profile to the app root
       profile_source = File.expand_path("../../resources/.profile", File.dirname(__FILE__))
@@ -73,7 +63,7 @@ module MapRBuildpack
         "config" => {
           "additional_libraries" => [
             target_path + "/mapr/hadoop/hadoop-2.7.0/etc/hadoop/core-site.xml"
-          ] ,
+          ],
           "environment_variables" => {
             "MAPR_HOME" => "/home/vcap/app/.mapr/mapr",
             "MAPR_TICKETFILE_LOCATION" => "/home/vcap/app/.mapr/ticket",
@@ -86,6 +76,32 @@ module MapRBuildpack
       File.open(config_path, "w") { |file| file.write(buildpackConfig.to_yaml) }
 
       print "Supplied MapR client at #{target_path}\n"
+    end
+
+    def supply_client_and_patches(mapr_client_url, mapr_client_patch_urls)
+      supply_file(mapr_client_url)
+      unless mapr_client_patch_urls.nil? || mapr_client_patch_urls == 0
+        mapr_client_patch_urls.each do |patch_url|
+          supply_file(patch_url)
+        end
+      end
+    end
+
+    def supply_file(url)
+      filename = URI(url).path.split('/').last
+      download_target = File.join(@app_dir, filename)
+
+      mapr_client = MapRBuildpack::MapRClient.new
+
+      if @configuration.is_in_offline_mode
+        already_available_file = File.expand_path("../../resources/#{filename}", File.dirname(__FILE__))
+        FileUtils.cp(already_available_file, download_target)
+      else
+        mapr_client.download(url, download_target)
+      end
+
+      target_path = File.join(@app_dir, ".mapr")
+      mapr_client.unzip(download_target, target_path)
     end
   end
 end
