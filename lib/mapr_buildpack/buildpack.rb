@@ -44,7 +44,7 @@ module MapRBuildpack
 
       mapr_client_version = @configuration.version
       url = @configuration.url(mapr_client_version)
-      patch_urls = @configuration.patchUrls(mapr_client_version)
+      patch_urls = @configuration.patch_urls(mapr_client_version)
       
       print "Selected MapR client version #{mapr_client_version}\n"
 
