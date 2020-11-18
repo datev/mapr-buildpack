@@ -89,7 +89,7 @@ module MapRBuildpack
         end
 
         def extract_debian(file, target_path)
-            print "Extracting #{file} to #{target_path}"
+            print "Extracting #{file} to #{target_path}\n"
             shell "dpkg -x #{file} #{target_path} 2>&1"
             shell "mv #{target_path}/opt/mapr #{target_path}/mapr"
             shell "rm -f #{target_path}/opt -r 2> /dev/null"
@@ -100,10 +100,24 @@ module MapRBuildpack
         end
 
         def extract_mapr_patch(path)
-            if File.directory?("#{path}/mapr/mapr/.patch/")
-                print "Current package contains a patch; applying patch to MapR client"
-                shell "mv #{path}/mapr/mapr/.patch/ #{path}/mapr/"
-                shell "rm -f #{path}/mapr/mapr/.patch/ -r 2> /dev/null"
+            patch_path = "#{path}/mapr/mapr/.patch/"
+            if File.directory?(patch_path)
+                patch_version = ""
+                Find.find("#{patch_path}MapRBuildVersion.*") do |filename|
+                    patch_version = filename.split(/\s|\./)[1]
+                end
+
+                print "Current package contains patch (version=#{patch_version}); applying patch to MapR client\n"
+
+                Find.find(patch_path) do |current_file|
+                    unless FileTest.directory?(current_file)
+                        target = current_file.sub(".#{patch_version}", "")
+                        print "moving #{patch_path}#{current_file} to #{path}/mapr/#{target}"
+                        shell "mv #{patch_path}#{current_file} #{path}/mapr/#{target}"
+                    end
+                end
+
+                shell "rm -f #{patch_path}/mapr/mapr/.patch/ -r 2> /dev/null"
             end
         end
 
