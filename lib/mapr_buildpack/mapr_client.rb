@@ -19,7 +19,6 @@ require 'mapr_buildpack'
 require 'fileutils'
 require 'open-uri'
 require 'find'
-require 'dir'
 
 module MapRBuildpack
   class MapRClient
