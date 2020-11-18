@@ -105,16 +105,16 @@ module MapRBuildpack
             if FileTest.directory?(patch_path)
                 patch_version = ""
                 Dir.glob("#{patch_path}MapRBuildVersion.*") do |filename|
-                    patch_version = filename.split(/\s|\./)[1]
+                    patch_version = filename.split(/\s|\./)[-1]
                 end
 
                 print "Current package contains patch (version=#{patch_version}); applying patch to MapR client\n"
 
                 Find.find(patch_path) do |current_file|
                     unless FileTest.directory?(current_file)
-                        target = current_file.sub(".#{patch_version}", "")
+                        target = current_file.sub(".#{patch_version}", "").sub(patch_path, "")
                         print "moving #{patch_path}#{current_file} to #{path}/mapr/#{target}"
-                        shell "mv #{patch_path}#{current_file} #{path}/mapr/#{target}"
+                        shell "mv #{current_file} #{path}/mapr/#{target}"
                     end
                 end
 
