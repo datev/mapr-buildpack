@@ -89,6 +89,7 @@ module MapRBuildpack
         end
 
         def extract_debian(file, target_path)
+            print "Extracting #{file} to #{target_path}"
             shell "dpkg -x #{file} #{target_path} 2>&1"
             shell "mv #{target_path}/opt/mapr #{target_path}/mapr"
             shell "rm -f #{target_path}/opt -r 2> /dev/null"
@@ -99,9 +100,10 @@ module MapRBuildpack
         end
 
         def extract_mapr_patch(path)
-            if File.directory?("#{path}/mapr/.patch/")
-                shell "mv #{path}/mapr/.patch/ #{path}/mapr/"
-                shell "rm -f #{path}/mapr/.patch/ -r 2> /dev/null"
+            if File.directory?("#{path}/mapr/mapr/.patch/")
+                print "Current package contains a patch; applying patch to MapR client"
+                shell "mv #{path}/mapr/mapr/.patch/ #{path}/mapr/"
+                shell "rm -f #{path}/mapr/mapr/.patch/ -r 2> /dev/null"
             end
         end
 
