@@ -19,6 +19,7 @@ require 'mapr_buildpack'
 require 'fileutils'
 require 'open-uri'
 require 'find'
+require 'dir'
 
 module MapRBuildpack
   class MapRClient
@@ -104,7 +105,7 @@ module MapRBuildpack
             patch_path = "#{path}/mapr/mapr/.patch/"
             if FileTest.directory?(patch_path)
                 patch_version = ""
-                Find.find("#{patch_path}MapRBuildVersion.*") do |filename|
+                Dir.glob("#{patch_path}MapRBuildVersion.*") do |filename|
                     patch_version = filename.split(/\s|\./)[1]
                 end
 
