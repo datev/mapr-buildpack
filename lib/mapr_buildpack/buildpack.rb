@@ -34,6 +34,7 @@ module MapRBuildpack
       @deps = deps
       @index = index
       @configuration = MapRBuildpack::Configuration.new
+      @target_path = File.join(@app_dir, ".mapr")
     end
 
     # Supplies the MapR client to the droplet
@@ -49,7 +50,6 @@ module MapRBuildpack
       print "Selected MapR client version #{mapr_client_version}\n"
 
       # Download and extract the MapR client with all available patches
-      print "-----> Downloading MapR Client #{mapr_client_version}\n"
       supply_client_and_patches(url, patch_urls)
 
       # Copy .profile to the app root
@@ -62,7 +62,7 @@ module MapRBuildpack
         "name" => "mapr_buildpack",
         "config" => {
           "additional_libraries" => [
-            "/mapr/hadoop/hadoop-2.7.0/etc/hadoop/core-site.xml"
+            @target_path + "/mapr/hadoop/hadoop-2.7.0/etc/hadoop/core-site.xml"
           ],
           "environment_variables" => {
             "MAPR_HOME" => "/home/vcap/app/.mapr/mapr",
@@ -75,7 +75,7 @@ module MapRBuildpack
       config_path = File.join(@deps, @index, "config.yml")
       File.open(config_path, "w") { |file| file.write(buildpackConfig.to_yaml) }
 
-      print "Supplied MapR client at #{target_path}\n"
+      print "Supplied MapR client at #{@target_path}\n"
     end
 
     def supply_client_and_patches(mapr_client_url, mapr_client_patch_urls)
@@ -102,8 +102,7 @@ module MapRBuildpack
         mapr_client.download(url, download_target)
       end
 
-      target_path = File.join(@app_dir, ".mapr")
-      mapr_client.unzip(download_target, target_path)
+      mapr_client.unzip(download_target, @target_path)
     end
   end
 end
