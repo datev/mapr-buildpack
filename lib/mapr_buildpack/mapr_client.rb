@@ -91,16 +91,18 @@ module MapRBuildpack
         def extract_debian(file, target_path)
             shell "dpkg -x #{file} #{target_path} 2>&1"
             shell "mv #{target_path}/opt/mapr #{target_path}/mapr"
-            shell "rm #{target_path}/opt -r 2> /dev/null"
-            shell "rm #{target_path}/RPMS/ -r 2> /dev/null"
-            shell "rm #{target_path}/SPECS/ -r 2> /dev/null"
+            shell "rm -f #{target_path}/opt -r 2> /dev/null"
+            shell "rm -f #{target_path}/RPMS/ -r 2> /dev/null"
+            shell "rm -f #{target_path}/SPECS/ -r 2> /dev/null"
 
             extract_mapr_patch(target_path)
         end
 
         def extract_mapr_patch(path)
-            shell "mv #{path}/mapr/.patch/ #{path}/mapr/"
-            shell "rm #{path}/mapr/.patch -r 2> /dev/null"
+            if File.directory?("#{path}/mapr/.patch/")
+                shell "mv #{path}/mapr/.patch/ #{path}/mapr/"
+                shell "rm -f #{path}/mapr/.patch/ -r 2> /dev/null"
+            end
         end
 
         def compression_flag(file)
