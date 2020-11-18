@@ -102,7 +102,7 @@ module MapRBuildpack
 
         def extract_mapr_patch(path)
             patch_path = "#{path}/mapr/mapr/.patch/"
-            if File.directory?(patch_path)
+            if FileTest.directory?(patch_path)
                 patch_version = ""
                 Find.find("#{patch_path}MapRBuildVersion.*") do |filename|
                     patch_version = filename.split(/\s|\./)[1]
