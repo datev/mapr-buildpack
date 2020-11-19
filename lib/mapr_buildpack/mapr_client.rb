@@ -93,9 +93,9 @@ module MapRBuildpack
             print "Extracting #{file} to #{target_path}\n"
             shell "dpkg -x #{file} #{target_path} 2>&1"
             shell "mv #{target_path}/opt/mapr #{target_path}/mapr"
-            shell "rm -f #{target_path}/opt -r 2> /dev/null"
-            shell "rm -f #{target_path}/RPMS/ -r 2> /dev/null"
-            shell "rm -f #{target_path}/SPECS/ -r 2> /dev/null"
+            shell "rm -rf #{target_path}/opt -r 2> /dev/null"
+            shell "rm -rf #{target_path}/RPMS/ -r 2> /dev/null"
+            shell "rm -rf #{target_path}/SPECS/ -r 2> /dev/null"
 
             extract_mapr_patch(target_path)
         end
@@ -113,12 +113,11 @@ module MapRBuildpack
                 Find.find(patch_path) do |current_file|
                     unless FileTest.directory?(current_file)
                         target = current_file.sub(".#{patch_version}", "").sub(patch_path, "")
-                        print "moving #{patch_path}#{current_file} to #{path}/mapr/#{target}"
                         shell "mv #{current_file} #{path}/mapr/#{target}"
                     end
                 end
 
-                shell "rm -f #{patch_path}/mapr/mapr/.patch/ -r 2> /dev/null"
+                shell "rm -rf #{patch_path}/mapr/mapr/.patch/ -r 2> /dev/null"
             end
         end
 
