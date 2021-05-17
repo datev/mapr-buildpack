@@ -15,4 +15,4 @@
 
 # Configuration for available MapR client versions
 ---
-defaultVersion: 6.1.0
+defaultVersion: 6.1.1
