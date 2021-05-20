@@ -101,5 +101,8 @@ fi
 
 ### Write Log4j property to conf.log4j.properties
 for var in "${!MAPR_LOGGING_@}"; do
-    echo "$var=${!var}" >> "$MAPR_HOME/conf/log4j.properties"  
+    KEY=${var#"MAPR_LOGGING_"}
+    KEY="${KEY//_/.}"
+    VALUE=${!var}
+    echo "$KEY=$VALUE" >> "$MAPR_HOME/conf/log4j.properties"
 done
