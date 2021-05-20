@@ -6,10 +6,11 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   rake
   rubyzip
 
 BUNDLED WITH
-   2.1.2
+   2.1.4

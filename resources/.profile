@@ -98,3 +98,8 @@ then
 else
     echo $MAPR_SSL_TRUSTSTORE | base64 --decode > "$MAPR_HOME/conf/ssl_truststore"
 fi
+
+### Write Log4j property to conf.log4j.properties
+for var in "${!MAPR_LOGGING_@}"; do
+    echo "$var=${!var}" >> "$MAPR_HOME/conf/log4j.properties"  
+done

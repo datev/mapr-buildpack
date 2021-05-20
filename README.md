@@ -28,6 +28,7 @@ The buildpack requires some arguments to setup the MapR client configuration dur
 - `$MAPR_CLDB_NODES`: Comma separated list of all available CLDB nodes with including the CLDB port (usually 7222)
 - `$MAPR_CORE_SITE` (optional): The content of this file will be set as content of the `core-site.xml` file
 - `$MAPR_SSL_TRUSTSTORE`(optional): This variable contains the SSL truststore as base64 encoded string. The decoded value will be written to the ssl_trustore file
+- `$MAPR_LOGGING_{LOG4J_PROPERTY_KEY}` (optional): This variable contains placeholder for LOG4J Property-Key, that will be written to `conf/log4j.properties`.
 
 #### Open Service Broker API:
 The Service Broker should provide a JSON with the following structure to the [VCAP_SERVICES](https://docs.run.pivotal.io/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES):
