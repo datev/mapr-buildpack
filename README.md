@@ -110,6 +110,7 @@ $ bundle exec rake clean package OFFLINE=true MBP_MAPR_CLIENT_VERSION=6.0.0
 ...
 Creating build/mapr-buildpack-offline-a4f856f.zip
 ```
-
+### Upload package to datev artifactory
+package has to uploaded via curl to "https://repo.prod.datev.de/artifactory/gen-mapr-mirror/buildpacks/". You get the curl command for uploading from: go/repo choosing gen-mapr-mirror from "set me up"
 ## License
 This buildpack is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
